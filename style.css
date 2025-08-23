@@ -1245,3 +1245,51 @@ section{
     padding: var(--space-5) 0 var(--space-4) 0;
   }
 }
+
+/* Updated contact section */
+.contact-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-8);
+  align-items: start;
+}
+
+.contact-cta {
+  background: rgba(255, 255, 255, 0.7);
+  padding: var(--space-6);
+  border-radius: var(--border-radius);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+[data-theme="dark"] .contact-cta {
+  background: rgba(30, 41, 59, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.contact-cta h3 {
+  margin: 0 0 var(--space-3) 0;
+  background: var(--brand-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-size: 1.5rem;
+}
+
+.contact-cta p {
+  margin: 0 0 var(--space-4) 0;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+/* Resume button styling */
+.cta-buttons {
+  display: flex;
+  gap: var(--space-3);
+  margin-top: var(--space-5);
+  flex-wrap: wrap;
+}
