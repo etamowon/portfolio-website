@@ -22,75 +22,123 @@ function setActive(id) {
   });
 }
 
-// ===== scrollspy, but clicks "snap" immediately =====
+// ===== smooth scrolling and scrollspy =====
 const HEADER_HEIGHT = 72;
+const SCROLL_OFFSET = HEADER_HEIGHT + 20; // Account for header height + some padding
 
-let isAutoScrolling = false;   // pause observer while true
-let pendingId = null;          // where we're headed
+let isAutoScrolling = false;
 let scrollEndTimer = null;
 
-function afterScrollEnds(fn, delay = 120) {
+function afterScrollEnds(fn, delay = 150) {
   clearTimeout(scrollEndTimer);
   scrollEndTimer = setTimeout(fn, delay);
 }
 
-// CLICK: make clicked link active NOW, smooth scroll, no pass-through
+// CLICK: smooth scroll to section
 navLinks.forEach(link => {
   link.addEventListener('click', (e) => {
     const id = link.getAttribute('href').slice(1);
     const target = document.getElementById(id);
     if (!target) return;
 
-    e.preventDefault(); // control the scroll
+    e.preventDefault();
 
-    // highlight immediately (so hover leaving doesn't kill it)
+    // Set active immediately for better UX
     setActive(id);
 
-    // mute the observer during the smooth travel
+    // Mute observer during smooth scroll
     isAutoScrolling = true;
-    pendingId = id;
 
-    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    // Calculate the exact position to scroll to
+    const targetPosition = target.offsetTop - SCROLL_OFFSET;
+
+    // Smooth scroll to the calculated position
+    window.scrollTo({
+      top: targetPosition,
+      behavior: 'smooth'
+    });
+
+    // Update URL
     history.pushState(null, '', `#${id}`);
+
+    // Re-enable observer after scroll completes
+    afterScrollEnds(() => {
+      isAutoScrolling = false;
+    });
   });
 });
 
-// when scrolling stops, just re-enable observer
+// SCROLLSPY: Simple and reliable scroll-based navigation highlighting
+function updateActiveSection() {
+  if (isAutoScrolling) return;
+
+  const scrollPosition = window.scrollY + SCROLL_OFFSET;
+  
+  // Find which section is currently in view
+  let currentSection = null;
+  
+  sections.forEach(section => {
+    const sectionTop = section.offsetTop;
+    const sectionHeight = section.offsetHeight;
+    const sectionBottom = sectionTop + sectionHeight;
+    
+    // Check if current scroll position is within this section
+    if (scrollPosition >= sectionTop && scrollPosition < sectionBottom) {
+      currentSection = section;
+    }
+  });
+  
+  // If we're at the very top, default to home
+  if (scrollPosition < sections[0].offsetTop) {
+    currentSection = sections[0];
+  }
+  
+  // If we're past the last section, default to the last section
+  if (scrollPosition >= sections[sections.length - 1].offsetTop) {
+    currentSection = sections[sections.length - 1];
+  }
+  
+  // Update active nav link
+  if (currentSection) {
+    setActive(currentSection.id);
+    // Update URL without triggering scroll
+    if (history.state !== currentSection.id) {
+      history.replaceState(currentSection.id, '', `#${currentSection.id}`);
+    }
+  }
+}
+
+// Handle scroll events
 window.addEventListener('scroll', () => {
   if (isAutoScrolling) {
     afterScrollEnds(() => {
       isAutoScrolling = false;
-      pendingId = null;
     });
+  } else {
+    // Throttle scroll events for better performance
+    if (!window.scrollTimeout) {
+      window.scrollTimeout = setTimeout(() => {
+        updateActiveSection();
+        window.scrollTimeout = null;
+      }, 10);
+    }
   }
 });
 
-// OBSERVER: only handles wheel/touch scrolling (the nice "torch pass")
-const observer = new IntersectionObserver(
-  (entries) => {
-    if (isAutoScrolling) return; // ignore while auto-scrolling from a click
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        setActive(entry.target.id);
-      }
-    });
-  },
-  {
-    root: null,
-    threshold: 0.4,
-    rootMargin: `-${HEADER_HEIGHT}px 0px -40% 0px`
-  }
-);
-
-sections.forEach(sec => observer.observe(sec));
-
-// on load, respect the hash or start at the first section
+// Initialize on page load
 window.addEventListener('DOMContentLoaded', () => {
   const id = location.hash.slice(1);
-  if (id && linkById[id]) setActive(id);
-  else if (sections[0]) setActive(sections[0].id);
+  if (id && linkById[id]) {
+    setActive(id);
+  } else if (sections[0]) {
+    setActive(sections[0].id);
+  }
+  
+  // Initial check for active section
+  updateActiveSection();
 });
 
+// Typewriter effect
 document.addEventListener('DOMContentLoaded', () => {
   const words = ["web development", "web design", "app development", "app design", "front end development"];
   let i = 0, j = 0, isDeleting = false;
