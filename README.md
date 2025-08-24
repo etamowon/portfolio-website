@@ -60,7 +60,6 @@ The website is fully responsive and optimized for:
 
 ## 🚀 Performance
 
-- **Lighthouse Score:** 95+ across all metrics
 - **Mobile Optimized** with touch-friendly interactions
 - **Fast loading** with efficient CSS and JavaScript
 - **Cross-browser compatible** (Chrome, Firefox, Safari, Edge)
@@ -167,3 +166,4 @@ This project is open source and available under the [MIT License](LICENSE).
 **⭐ If you found this project helpful, please consider giving it a star!**
 
 *Built with ❤️ by Etam Wonkam*
+
