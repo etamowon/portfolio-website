@@ -236,6 +236,11 @@ header {
   transform: scale(1.05);
 }
 
+.nav-right {
+  display: flex;
+  align-items: center;
+}
+
 /* Theme toggle button */
 .theme-toggle {
   background: none;
@@ -1026,9 +1031,55 @@ section{
     grid-template-columns: 1fr 1fr;
   }
   
-  .navbar ul {
-    display: none;
+  /* --- START: Mobile Nav Fix --- */
+  
+  /* Make the header stack logo and nav controls */
+  .navbar .container {
+    flex-direction: column; 
+    align-items: stretch; /* Make items full-width */
+    height: auto; /* Allow header to grow */
+    padding: var(--space-3);
   }
+  
+  /* Create a top row for logo and toggle */
+  .nav-right, .logo {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+  }
+  
+  /* This holds the links */
+  .navbar ul {
+    display: flex;
+    flex-direction: column; /* Stack links vertically */
+    width: 100%;
+    margin-top: var(--space-3);
+    gap: var(--space-1);
+  }
+
+  .navbar ul li {
+    width: 100%;
+  }
+  
+  .navbar a {
+    display: block;
+    text-align: center;
+    padding: var(--space-2);
+  }
+  
+  .navbar a:hover, .navbar a.is-active {
+    background: var(--bg-secondary); /* Restore hover effect */
+  }
+  
+  .navbar a::after {
+    display: none; /* Hide desktop underline */
+  }
+
+  .theme-toggle {
+    margin-left: 0; /* Remove desktop margin */
+  }
+
+  /* --- END: Mobile Nav Fix --- */
   
   .section-title {
     font-size: 2rem;
