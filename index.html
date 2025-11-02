@@ -14,7 +14,7 @@
             <div class="container">
                 <a href="#home" class="logo">Etam W.</a>
                 <div class="nav-right">
-                    <ul>
+                    <ul id="nav-menu">
                         <li><a href="#home">Home</a></li>
                         <li><a href="#about">About</a></li>
                         <li><a href="#experience">Experience</a></li>
@@ -22,8 +22,15 @@
                         <li><a href="#projects">Projects</a></li>
                         <li><a href="#contact">Contact</a></li>
                     </ul>
+                    
                     <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
                         <span class="theme-icon">🌙</span>
+                    </button>
+                    
+                    <button class="menu-toggle" id="menu-toggle" aria-label="Toggle menu" aria-expanded="false">
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                        <span class="bar"></span>
                     </button>
                 </div>
             </div>

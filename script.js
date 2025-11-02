@@ -175,3 +175,31 @@ const savedTheme = localStorage.getItem('theme') || 'light';
 document.documentElement.setAttribute('data-theme', savedTheme);
 document.querySelector('.theme-icon').textContent = savedTheme === 'dark' ? '☀️' : '🌙';
 
+/* --- START: Hamburger Menu Logic --- */
+document.addEventListener('DOMContentLoaded', () => {
+  const menuToggle = document.getElementById('menu-toggle');
+  const navMenu = document.getElementById('nav-menu');
+  const navLinks = navMenu.querySelectorAll('a');
+
+  if (menuToggle && navMenu) {
+    // 1. Toggle menu when hamburger is clicked
+    menuToggle.addEventListener('click', () => {
+      navMenu.classList.toggle('is-open');
+      menuToggle.classList.toggle('is-open');
+      
+      // A11y: Update aria-expanded attribute
+      const isOpen = navMenu.classList.contains('is-open');
+      menuToggle.setAttribute('aria-expanded', isOpen);
+    });
+
+    // 2. Close menu when a link is clicked
+    navLinks.forEach(link => {
+      link.addEventListener('click', () => {
+        navMenu.classList.remove('is-open');
+        menuToggle.classList.remove('is-open');
+        menuToggle.setAttribute('aria-expanded', 'false');
+      });
+    });
+  }
+});
+/* --- END: Hamburger Menu Logic --- */
